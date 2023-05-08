@@ -17,7 +17,7 @@ Next, download the git repository:
 
     > git clone https://github.com/calebabutler/verilog-pi-calculator.git
 
-Now, make the build.sh script executable if it is not already:
+Make the build.sh script executable if it is not already:
 
     > chmod +x build.sh
 
