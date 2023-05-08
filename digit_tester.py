@@ -21,23 +21,56 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+'''
+This script compares the digits in the pi.txt file with the ones in the
+transcript.txt file. The pi.txt file contains the real one million digits of
+pi, found online. The transcript.txt file is the stdout output from running
+the pi_calculator simulation in Verilator. The use case goes like this:
+
+    1. Install Verilator. On Ubuntu or Debian:
+        sudo apt install verilator
+
+    2. Make build.sh executable if it is not.
+        chmod +x build.sh
+
+    3. Run build.sh.
+        ./build.sh
+
+    4. Run the following command.
+        ./obj_dir/Vpi_calculator > transcript.txt
+
+    5. Use this script to compare digits.
+        python3 digit_tester.py
+'''
+
 def get_pi(filename):
+    '''
+    This function reads the given file and returns a string with the digits
+    of pi (without . separating 3 from the rest).
+    '''
     with open(filename, 'r') as f:
         for line in f:
             pi = line[0] + line[2:]
     return pi
 
 def compare_with_transcript(filename, pi):
+    '''
+    This function reads the transcript file given and compares it with the
+    digits of pi given.
+    '''
+    # Align pi with transcript file
     pi = '        ' + pi
     has_test_failed = False
     with open(filename, 'r') as f:
         for i, line in enumerate(f):
-            digits = line
-            if int(digits) != int(pi[i * 9:i * 9 + 9]):
+            # Compare ints to avoid differences in representation (0s instead
+            # of spaces most importantly).
+            if int(line) != int(pi[i * 9:i * 9 + 9]):
                 has_test_failed = True
                 print(f"Difference at line {i}")
-                print(f"    Transcript digits = {digits}")
+                print(f"    Transcript digits = {line}")
                 print(f"    Real digits = {pi[i * 9: i * 9 + 9]}")
+    # Print something even if all digits are the same.
     if has_test_failed:
         print('Test failed.')
     else:
