@@ -22,32 +22,48 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/* This file instructs Verilator how to simulate the pi_calculator module. The
+ * pi_calculator_testbench cannot be compiled by Verilator unfortunately, and
+ * Verilator is much faster than QuestaSim at simulating Verilog code. So, in
+ * order to use Verilator, I have reimplemented what the testbench does in
+ * C++.
+ */
+
 #include "Vpi_calculator.h"
 #include "verilated.h"
 
 int main(int argc, char** argv) {
+    // Amount of digits requested to calculate
     const unsigned int REQUEST_DIGITS = 1000000;
+
     bool is_first_run = true;
 
     Verilated::commandArgs(argc, argv);
     Vpi_calculator* top = new Vpi_calculator;
 
+    // Initialize all of the inputs
     top->clock = 0;
     top->reset_n = 0;
     top->start = 0;
     top->digits = REQUEST_DIGITS;
 
     while (!Verilated::gotFinish()) {
+        // Complete the simulation given the current inputs
         top->eval();
+        // After one run, set reset high and start high
         if (is_first_run) {
             top->reset_n = 1;
             top->start = 1;
             is_first_run = false;
         }
+        // Alternate clock
         top->clock = !top->clock;
+        // On rising clock edge
         if (top->clock) {
             if (top->valid_output) {
+                // Print pi digit when valid output is on
                 VL_PRINTF("%09d\n", top->pi_digit);
+                // If done is on exit the simulation
                 if (top->done) {
                     break;
                 }
