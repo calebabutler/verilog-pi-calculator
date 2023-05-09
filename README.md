@@ -1,6 +1,6 @@
 # Verilog pi calculator
 
-This is a hardware design that calculates pi to a million digits. 
+This is a hardware design that calculates pi to a million digits. There is a youtube video giving a brief introduction of the design [here](https://youtu.be/wFw-m4XfpX4).
 
 ![A screenshot of the time it takes to calculate a million digits (13 hours).](https://github.com/calebabutler/verilog-pi-calculator/blob/main/time_screenshot.png?raw=true)
 
